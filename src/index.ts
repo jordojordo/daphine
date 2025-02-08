@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import ejs from 'ejs';
 
 import indexRouter from '@routes/index';
 import streamRouter from '@routes/stream';
@@ -34,7 +35,7 @@ app.use('/health', cors(CORS_OPT), healthRouter);
 app.use('/ready', cors(CORS_OPT), healthRouter);
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', ejs);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 	next(createError(404));
