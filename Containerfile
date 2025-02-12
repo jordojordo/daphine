@@ -1,14 +1,8 @@
 # Build stage
 FROM node:22-alpine AS build
 
-ENV PNPM_HOME="/root/.local/share/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-ENV SHELL="/bin/sh"
-ENV ENV="/root/.profile"
-
-RUN apk add --no-cache curl ca-certificates \
-    && touch /root/.profile \
-    && curl -fsSL https://get.pnpm.io/install.sh | sh - \
+RUN apk add --no-cache curl ca-certificates nodejs npm \
+    && npm install -g pnpm@10.3.0 \
     && pnpm --version
 
 WORKDIR /usr/src/app
