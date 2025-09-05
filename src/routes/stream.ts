@@ -4,5 +4,5 @@ import { createStream } from '@api/stream';
 const router = express.Router();
 
 export default router.get('/', (req: Request, res: Response) => {
-	createStream(req, res);
+  createStream(req, res);
 });

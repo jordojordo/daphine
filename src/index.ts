@@ -1,3 +1,5 @@
+import type { HttpError } from './types';
+
 import 'module-alias/register';
 import createError from 'http-errors';
 import express, { type NextFunction, type Request, type Response } from 'express';
@@ -37,14 +39,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-	next(createError(404));
+  next(createError(404));
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-	res.locals.message = err.message;
-	res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((err: HttpError, req: Request, res: Response) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	return sendErrorResponse(req, res, `${ err.message }`, err.status || 500);
+  return sendErrorResponse(req, res, `${ err.message }`, err.status || 500);
 });
 
 export default app;

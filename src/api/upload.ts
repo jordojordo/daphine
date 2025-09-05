@@ -1,4 +1,4 @@
-// import {type Request, type Response} from 'express';
+// import type { Request, Response } from 'express';
 
 // export const createUpload = (req: Request, res: Response) => {
 // 	if ( !req.files || Object.keys(req.files).length === 0 ) {

@@ -6,7 +6,7 @@ const router = express.Router();
 let serverReady = false;
 
 serverEvents.on('ready', (state) => {
-    serverReady = state;
+  serverReady = state;
 });
 
 // Liveness probe route
@@ -16,7 +16,7 @@ router.get('/', (req: Request, res: Response) => {
 
 // Readiness probe route
 router.get('/', (req: Request, res: Response) => {
-  if ( serverReady ) {
+  if (serverReady) {
     res.sendStatus(200);
   } else {
     res.sendStatus(503);
