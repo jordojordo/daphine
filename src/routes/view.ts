@@ -4,5 +4,5 @@ import { createView } from '@api/view';
 const router = express.Router();
 
 export default router.get('/', (req: Request, res: Response) => {
-	createView(req, res);
+  createView(req, res);
 });

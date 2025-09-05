@@ -1,142 +1,88 @@
+import js from '@eslint/js';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
-  { languageOptions: { globals: globals.node } },
-  { ignores: ['dist/*', 'node_modules/*', 'pnpm-lock.yaml'] },
+  { name: 'env', languageOptions: { globals: globals.node } },
+
+  { name: 'ignores', ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'] },
+
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+
   {
-    'rules':       {
-      'dot-notation':                   'off',
-      'guard-for-in':                   'off',
-      'new-cap':                        'off',
-      'no-empty':                       'off',
-      'no-extra-boolean-cast':          'off',
-      'no-new':                         'off',
-      'no-plusplus':                    'off',
-      'no-useless-escape':              'off',
-      'strict':                         'off',
-      'vue/html-self-closing':          'off',
-      'vue/no-v-html':                  'off',
-      'vue/multi-word-component-names': 'off',
-
-      'array-bracket-spacing':             'warn',
-      'arrow-parens':                      'warn',
-      'arrow-spacing':                     ['warn', {
-        'before': true,
-        'after':  true
+    name:    'stylistic (JS+TS)',
+    plugins: { '@stylistic': stylistic },
+    rules:   {
+      '@stylistic/indent':                ['warn', 2],
+      '@stylistic/quotes':                ['warn', 'single', { avoidEscape: true, allowTemplateLiterals: 'always' }],
+      '@stylistic/semi':                  ['warn', 'always'],
+      '@stylistic/comma-dangle':          ['warn', 'only-multiline'],
+      '@stylistic/function-call-spacing': ['warn', 'never'],
+      '@stylistic/key-spacing':           ['warn', {
+        align:     {
+          beforeColon: false, afterColon: true, on: 'value', mode: 'minimum'
+        },
+        multiLine: { beforeColon: false, afterColon: true },
       }],
-      'block-spacing':                     ['warn', 'always'],
-      'brace-style':                       ['warn', '1tbs'],
-      'comma-dangle':                      ['warn', 'only-multiline'],
-      'comma-spacing':                     'warn',
-      'curly':                             'warn',
-      'eqeqeq':                            'warn',
-      'func-call-spacing':                 ['warn', 'never'],
-      'implicit-arrow-linebreak':          'warn',
-      'indent':                            ['warn', 2],
-      'keyword-spacing':                   'warn',
-      'lines-between-class-members':       ['warn', 'always', { 'exceptAfterSingleLine': true }],
-      'multiline-ternary':                 ['warn', 'never'],
-      'newline-per-chained-call':          ['warn', { 'ignoreChainWithDepth': 4 }],
-      'no-caller':                         'warn',
-      'no-cond-assign':                    ['warn', 'except-parens'],
-      'no-console':                        'warn',
-      'no-debugger':                       'warn',
-      'no-eq-null':                        'warn',
-      'no-eval':                           'warn',
-      'no-trailing-spaces':                'warn',
-      'no-undef':                          'warn',
-      'no-unused-vars':                    'warn',
-      'no-whitespace-before-property':     'warn',
-      'object-curly-spacing':              ['warn', 'always'],
-      'object-property-newline':           'warn',
-      'object-shorthand':                  'warn',
-      'padded-blocks':                     ['warn', 'never'],
-      'prefer-arrow-callback':             'warn',
-      'prefer-template':                   'warn',
-      'rest-spread-spacing':               'warn',
-      'semi':                              ['warn', 'always'],
-      'space-before-function-paren':       ['warn', 'never'],
-      'space-infix-ops':                   'warn',
-      'spaced-comment':                    'warn',
-      'switch-colon-spacing':              'warn',
-      'template-curly-spacing':            ['warn', 'always'],
-      'yield-star-spacing':                ['warn', 'both'],
-
-      'key-spacing':              ['warn', {
-        'align': {
-          'beforeColon': false,
-          'afterColon':  true,
-          'on':          'value',
-          'mode':        'minimum'
-        },
-        'multiLine': {
-          'beforeColon': false,
-          'afterColon':  true
-        },
+      '@stylistic/object-curly-spacing': ['warn', 'always'],
+      '@stylistic/object-curly-newline': ['warn', {
+        ObjectExpression:  { multiline: true, minProperties: 3 },
+        ObjectPattern:     { multiline: true, minProperties: 4 },
+        ImportDeclaration: { multiline: true, minProperties: 5 },
+        ExportDeclaration: { multiline: true, minProperties: 3 },
       }],
-
-      'object-curly-newline':          ['warn', {
-        'ObjectExpression':  {
-          'multiline':     true,
-          'minProperties': 3
-        },
-        'ObjectPattern':     {
-          'multiline':     true,
-          'minProperties': 4
-        },
-        'ImportDeclaration': {
-          'multiline':     true,
-          'minProperties': 5
-        },
-        'ExportDeclaration': {
-          'multiline':     true,
-          'minProperties': 3
-        }
-      }],
-
-      'padding-line-between-statements': [
-        'warn',
+      '@stylistic/arrow-spacing':                   ['warn', { before: true, after: true }],
+      '@stylistic/brace-style':                     ['warn', '1tbs'],
+      '@stylistic/block-spacing':                   ['warn', 'always'],
+      '@stylistic/space-in-parens':                 ['warn', 'never'],
+      '@stylistic/newline-per-chained-call':        ['warn', { ignoreChainWithDepth: 4 }],
+      '@stylistic/multiline-ternary':               ['warn', 'never'],
+      '@stylistic/padded-blocks':                   ['warn', 'never'],
+      '@stylistic/padding-line-between-statements': ['warn',
         {
-          'blankLine': 'always',
-          'prev':      '*',
-          'next':      'return',
+          blankLine: 'always', prev: '*', next: 'return'
         },
         {
-          'blankLine': 'always',
-          'prev':      'function',
-          'next':      'function',
+          blankLine: 'always', prev: 'function', next: 'function'
         },
-        // This configuration would require blank lines after every sequence of variable declarations
+        // keep the “blank line after a declaration block, but not between consecutive declarations” pattern
         {
-          'blankLine': 'always',
-          'prev':      ['const', 'let', 'var'],
-          'next':      '*'
+          blankLine: 'always', prev: ['const', 'let', 'var'], next: '*'
         },
         {
-          'blankLine': 'any',
-          'prev':      ['const', 'let', 'var'],
-          'next':      ['const', 'let', 'var']
-        }
-      ],
-
-      'quotes': [
-        'warn',
-        'single',
-        {
-          'avoidEscape':           true,
-          'allowTemplateLiterals': true
+          blankLine: 'any',    prev: ['const', 'let', 'var'], next: ['const', 'let', 'var']
         },
       ],
+      '@stylistic/template-curly-spacing':      ['warn', 'always'],
+      '@stylistic/space-unary-ops':             ['warn', { words: true, nonwords: false }],
+      '@stylistic/yield-star-spacing':          ['warn', 'both'],
+      '@stylistic/lines-between-class-members': ['warn', 'always', { exceptAfterSingleLine: true }],
+      '@stylistic/space-before-function-paren': ['warn', 'never'],
+      '@stylistic/member-delimiter-style':      ['warn', {
+        multiline:  { delimiter: 'semi', requireLast: true },
+        singleline: { delimiter: 'semi', requireLast: false },
+      }],
+      '@stylistic/type-annotation-spacing': ['warn', {
+        before: false, after: true, overrides: { arrow: { before: true, after: true } }
+      }],
 
-      'space-unary-ops': [
-        'warn',
-        {
-          'words':    true,
-          'nonwords': false,
-        }
-      ]
-    }
-  }
+      'no-cond-assign': ['warn', 'except-parens'],
+    },
+  },
+
+  {
+    name:            'ts-parser',
+    files:           ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser:        tseslint.parser,
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+        projectService:  true,
+        sourceType:      'module',
+        ecmaVersion:     'latest',
+      },
+    },
+  },
 ];
-
-

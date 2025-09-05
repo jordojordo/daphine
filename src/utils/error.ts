@@ -7,14 +7,14 @@ export const sendErrorResponse = (
   statusCode: number = 500,
   acceptType: string = 'application/json'
 ) => {
-  let imageUrl = `https://httpstatusdogs.com/img/${statusCode}.jpg`;
-  let requestAccept = req.headers.accept || acceptType;
+  const imageUrl = `https://httpstatusdogs.com/img/${ statusCode }.jpg`;
+  const requestAccept = req.headers.accept || acceptType;
 
-  if ( requestAccept.includes('html') ) {
+  if (requestAccept.includes('html')) {
     res.status(statusCode).render('error', {
-      status: statusCode,
-      message: message || 'An unexpected error occurred',
-      imageUrl: imageUrl
+      status:   statusCode,
+      message:  message || 'An unexpected error occurred',
+      imageUrl
     });
   } else {
     res.status(statusCode).json({
