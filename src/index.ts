@@ -28,10 +28,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', cors(CORS_OPT), indexRouter);
-app.use('/stream*', cors(CORS_OPT), streamRouter);
-app.use('/music*', cors(CORS_OPT), musicRouter);
-// app.use("/upload*", cors(CORS_OPT), uploadRouter);
-app.use('/view*', cors(CORS_OPT), viewRouter);
+app.use('/stream', cors(CORS_OPT), streamRouter);
+app.use('/music', cors(CORS_OPT), musicRouter);
+// app.use("/upload", cors(CORS_OPT), uploadRouter);
+app.use('/view', cors(CORS_OPT), viewRouter);
 app.use('/health', cors(CORS_OPT), healthRouter);
 app.use('/ready', cors(CORS_OPT), healthRouter);
 
