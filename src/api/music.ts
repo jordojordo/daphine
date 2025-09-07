@@ -1,12 +1,20 @@
 import type { Request, Response } from 'express';
 
+import path from 'path';
 import fs from 'fs';
 
 import { sendErrorResponse } from '@src/utils/error';
+import { ASSETS_DIR } from '@src/utils/paths';
 
 export const createMusicStream = (req: Request, res: Response) => {
   const { range } = req.headers;
-  const songPath = `./assets/music/${ req.query.song }`;
+  const { song } = req.query;
+
+  if (typeof song !== 'string') {
+    return sendErrorResponse(req, res, 'Song query not provided', 400);
+  }
+
+  const songPath = path.join(ASSETS_DIR, 'music', song);
 
   if (!fs.existsSync(songPath)) {
     return sendErrorResponse(req, res, 'Song file does not exist.', 404);
