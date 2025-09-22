@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/jordojordo/daphine.git"
   },
-  "packageManager": "pnpm@10.16.1",
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "build": "tsc && copyfiles -u 1 src/views/**/* dist",
     "start": "node ./dist/server.js",
