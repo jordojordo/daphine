@@ -11,17 +11,17 @@ export const createMusicStream = (req: Request, res: Response) => {
   const { song } = req.query;
 
   if (typeof song !== 'string') {
-    return sendErrorResponse(req, res, 'Song query not provided', 400);
+    return sendErrorResponse(res, 'Song query not provided', 400);
   }
 
   const songPath = path.join(ASSETS_DIR, 'music', song);
 
   if (!fs.existsSync(songPath)) {
-    return sendErrorResponse(req, res, 'Song file does not exist.', 404);
+    return sendErrorResponse(res, 'Song file does not exist.', 404);
   }
 
   if (!range) {
-    return sendErrorResponse(req, res, 'Requires Range header', 400);
+    return sendErrorResponse(res, 'Requires Range header', 400);
   }
 
   try {
@@ -58,6 +58,6 @@ export const createMusicStream = (req: Request, res: Response) => {
     musicStream.pipe(res);
   } catch(e) {
     console.error(e);
-    sendErrorResponse(req, res, 'Internal server error.', 500);
+    sendErrorResponse(res, 'Internal server error.', 500);
   }
 };

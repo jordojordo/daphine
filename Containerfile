@@ -1,18 +1,16 @@
 # Build stage
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
-RUN apk add --no-cache curl ca-certificates nodejs npm \
-    && npm install -g pnpm@10.3.0 \
-    && pnpm --version
+RUN corepack enable
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN pnpm install
+COPY package*.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
 # Server stage
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/package.json ./

@@ -2,13 +2,13 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
-    "baseUrl": "./",
     "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
       "@src/*": ["./src/*"],
       "@routes/*": ["./src/routes/*"],
       "@api/*": ["./src/api/*"]
-    }, 
+    },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
