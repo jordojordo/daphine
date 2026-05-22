@@ -11,11 +11,11 @@ export const createStream = (req: Request, res: Response): void => {
   const { video } = req.query;
 
   if (!range) {
-    return sendErrorResponse(req, res, 'Requires range header', 400);
+    return sendErrorResponse(res, 'Requires range header', 400);
   }
 
   if (typeof video !== 'string') {
-    return sendErrorResponse(req, res, 'Video query not provided.', 400);
+    return sendErrorResponse(res, 'Video query not provided.', 400);
   }
 
   try {
@@ -54,6 +54,6 @@ export const createStream = (req: Request, res: Response): void => {
     videoStream.pipe(res);
   } catch(e) {
     console.error(e);
-    sendErrorResponse(req, res, 'Internal server error.', 500);
+    sendErrorResponse(res, 'Internal server error.', 500);
   }
 };
