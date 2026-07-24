@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Buildah Action
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         id: build-image
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
