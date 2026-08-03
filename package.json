@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/jordojordo/daphine.git"
   },
-  "packageManager": "pnpm@11.2.2",
+  "packageManager": "pnpm@11.20.0",
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/server.js",
