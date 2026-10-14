@@ -1,7 +1,7 @@
 # Build stage
-FROM node:24-alpine AS build
+FROM node:26-alpine AS build
 
-RUN corepack enable
+RUN npm install -g corepack && corepack enable
 
 WORKDIR /usr/src/app
 COPY package*.json pnpm-lock.yaml ./
@@ -10,7 +10,8 @@ COPY . .
 RUN pnpm build
 
 # Server stage
-FROM node:24-alpine
+FROM node:26-alpine
+RUN npm install -g corepack && corepack enable && apk add --no-cache curl su-exec
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/package.json ./
