@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 
-import path from 'path';
 import fs from 'fs';
 
 import { sendErrorResponse } from '@src/utils/error';
-import { ASSETS_DIR } from '@src/utils/paths';
+import { resolveAsset } from '@src/utils/paths';
+import { parseRange } from '@src/utils/range';
 
 export const createStream = (req: Request, res: Response): void => {
   const { range } = req.headers;
@@ -18,15 +18,24 @@ export const createStream = (req: Request, res: Response): void => {
     return sendErrorResponse(res, 'Video query not provided.', 400);
   }
 
+  const videoPath = resolveAsset('videos', video);
+
+  if (!videoPath) {
+    return sendErrorResponse(res, 'Video file does not exist.', 404);
+  }
+
   try {
     const videoType = video.split('.').pop();
-    const videoPath = path.join(ASSETS_DIR, 'videos', video);
     const videoSize = fs.statSync(videoPath).size;
+    const byteRange = parseRange(range, videoSize);
 
-    const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range?.replace(/\D/g, ''));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+    if (!byteRange) {
+      res.setHeader('Content-Range', `bytes */${ videoSize }`);
 
+      return sendErrorResponse(res, 'Range not satisfiable', 416);
+    }
+
+    const { start, end } = byteRange;
     const contentLength = end - start + 1;
 
     const headers = {
@@ -47,7 +56,7 @@ export const createStream = (req: Request, res: Response): void => {
 
     videoStream.on('error', (error) => {
       console.log(error);
-      res.sendStatus(500);
+      res.destroy();
     });
 
     // stream the video chunk to the client

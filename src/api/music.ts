@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 
-import path from 'path';
 import fs from 'fs';
 
 import { sendErrorResponse } from '@src/utils/error';
-import { ASSETS_DIR } from '@src/utils/paths';
+import { resolveAsset } from '@src/utils/paths';
+import { parseRange } from '@src/utils/range';
 
 export const createMusicStream = (req: Request, res: Response) => {
   const { range } = req.headers;
@@ -14,9 +14,9 @@ export const createMusicStream = (req: Request, res: Response) => {
     return sendErrorResponse(res, 'Song query not provided', 400);
   }
 
-  const songPath = path.join(ASSETS_DIR, 'music', song);
+  const songPath = resolveAsset('music', song);
 
-  if (!fs.existsSync(songPath)) {
+  if (!songPath) {
     return sendErrorResponse(res, 'Song file does not exist.', 404);
   }
 
@@ -26,11 +26,15 @@ export const createMusicStream = (req: Request, res: Response) => {
 
   try {
     const songSize = fs.statSync(songPath).size;
-    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const byteRange = parseRange(range, songSize);
 
-    const start = Number(range?.replace(/\D/g, ''));
-    const end = Math.min(start + CHUNK_SIZE, songSize - 1);
+    if (!byteRange) {
+      res.setHeader('Content-Range', `bytes */${ songSize }`);
 
+      return sendErrorResponse(res, 'Range not satisfiable', 416);
+    }
+
+    const { start, end } = byteRange;
     const contentLength = end - start + 1;
 
     const headers = {
@@ -51,7 +55,7 @@ export const createMusicStream = (req: Request, res: Response) => {
 
     musicStream.on('error', (error) => {
       console.warn('[error] Music stream:', error);
-      res.sendStatus(500);
+      res.destroy();
     });
 
     // stream the music chunk to the client
